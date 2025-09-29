@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigitalOcean Deploy 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: radial-gradient(ellipse at center, #000C79 0%, #000C2A 100%);
+            min-height: 100vh;
+            color: white;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px !important;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .container {
+                padding: 10px !important;
+            }
+        }
+
+        .header {
+            margin-bottom: 30px;
+            padding: 40px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            flex: 1;
+        }
+
+        .title-container {
+            display: inline-block;
+            text-align: left;
+        }
+
+        .qr-card {
+            background: rgba(0, 41, 77, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 200px;
+        }
+
+        .qr-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #ffc933;
+            text-align: center;
+        }
+
+        .qr-code {
+            width: 180px;
+            height: 180px;
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-code svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .logo {
+            font-size: 5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0;
+            letter-spacing: -0.02em;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .badge-25 {
+            display: inline-flex;
+            width: 146px;
+            height: 100px;
+            position: relative;
+        }
+
+        .logo-second-line {
+            font-size: 5rem;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -0.02em;
+            line-height: 1;
+            margin-top: 10px;
+        }
+
+        .region-display {
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: #e0e0e0;
+            opacity: 0.7;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 1.8rem;
+            opacity: 0.85;
+            font-weight: 400;
+            color: #e0e0e0;
+            display: none;
+        }
+
+        .deploy-status {
+            background: rgba(0, 41, 77, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ffc933;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 201, 51, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 201, 51, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 201, 51, 0); }
+        }
+
+        .status-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .region-info {
+            text-align: center;
+        }
+
+        .region-label {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-bottom: 5px;
+        }
+
+        .region-name {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffc933;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .card {
+            background: #000C2A80;
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            background: #000C2A;
+            border-color: #ffc933;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .card-description {
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            opacity: 0.7;
+            font-size: 0.9rem;
+            position: relative;
+            padding-bottom: 40px;
+        }
+
+        .footer-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            max-width: 1400px;
+            margin: 0 auto 40px;
+            padding: 0 20px;
+        }
+
+        .footer-svg {
+            flex-shrink: 0;
+        }
+
+        .footer-svg-left {
+            width: 200px;
+            height: auto;
+        }
+
+        .footer-svg-right {
+            width: 180px;
+            height: auto;
+        }
+
+        .footer-video {
+            flex: 1;
+            max-width: 700px;
+            aspect-ratio: 16/9;
+        }
+
+        .footer-video iframe {
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @media (max-width: 1024px) {
+            .footer-content {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .footer-svg-left,
+            .footer-svg-right {
+                width: 150px;
+            }
+
+            .footer-video {
+                width: 100%;
+                max-width: 600px;
+            }
+        }
+
+        /* Mobile responsive styles for Deploy title container */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 20px !important;
+                padding: 20px 0 !important;
+                margin-bottom: 20px !important;
+            }
+
+            .header-left {
+                align-items: center !important;
+                text-align: center !important;
+            }
+
+            .logo {
+                font-size: 3rem !important;
+                gap: 15px !important;
+            }
+
+            .badge-25 {
+                width: 110px !important;
+                height: 75px !important;
+            }
+
+            .logo-second-line {
+                font-size: 3rem !important;
+            }
+
+            .qr-card {
+                min-width: 180px !important;
+            }
+
+            .qr-code {
+                width: 140px !important;
+                height: 140px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 15px 0 !important;
+                margin-bottom: 15px !important;
+                gap: 15px !important;
+            }
+
+            .logo {
+                font-size: 2.5rem !important;
+                gap: 10px !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
+            .badge-25 {
+                width: 90px !important;
+                height: 60px !important;
+            }
+
+            .logo-second-line {
+                font-size: 2.5rem !important;
+                margin-top: 5px !important;
+            }
+
+            .region-display {
+                font-size: 1rem !important;
+                margin-top: 10px !important;
+                text-align: center !important;
+                padding: 0 10px !important;
+            }
+
+            .qr-card {
+                min-width: 160px !important;
+                padding: 15px !important;
+            }
+
+            .qr-code {
+                width: 120px !important;
+                height: 120px !important;
+            }
+
+            .qr-title {
+                font-size: 0.9rem !important;
+                margin-bottom: 10px !important;
+            }
+        }
+
+        /* Extra small mobile devices */
+        @media (max-width: 360px) {
+            .header {
+                padding: 10px 0 !important;
+                margin-bottom: 10px !important;
+                gap: 10px !important;
+            }
+
+            .logo {
+                font-size: 2rem !important;
+                gap: 8px !important;
+            }
+
+            .badge-25 {
+                width: 75px !important;
+                height: 50px !important;
+            }
+
+            .region-display {
+                font-size: 0.9rem !important;
+                margin-top: 8px !important;
+                padding: 0 5px !important;
+            }
+
+            .qr-card {
+                min-width: 140px !important;
+                padding: 12px !important;
+            }
+
+            .qr-code {
+                width: 100px !important;
+                height: 100px !important;
+            }
+
+            .qr-title {
+                font-size: 0.8rem !important;
+                margin-bottom: 8px !important;
+            }
+        }
+
+        .navigation {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: none;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 201, 51, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 201, 51, 0.3);
+            border-radius: 25px;
+            padding: 10px 20px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 201, 51, 0.3);
+            transform: translateY(-2px);
+            border-color: #ffc933;
+        }
+
+        .arch-page, .repo-page {
+            display: none;
+        }
+
+        .arch-page.active, .repo-page.active {
+            display: block;
+        }
+
+        .main-page.hidden {
+            display: none;
+        }
+
+        .arch-image {
+            max-width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin: 20px 0;
+        }
+
+        .back-btn {
+            background: rgba(255, 201, 51, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 201, 51, 0.3);
+            border-radius: 25px;
+            padding: 10px 20px;
+            color: white;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 201, 51, 0.3);
+            transform: translateY(-2px);
+            border-color: #ffc933;
+        }
+    </style>
+</head>
+<body>
+    <div class="navigation">
+        <a href="#" class="nav-btn" onclick="showPage('main')">Home</a>
+        <a href="#" class="nav-btn" onclick="showPage('arch')">Architecture</a>
+        <a href="#" class="nav-btn" onclick="showPage('repo')">Repository</a>
+    </div>
+
+    <div class="container">
+        <!-- Main Page -->
+        <div class="main-page" id="mainPage">
+            <div class="header">
+                <div class="header-left">
+                    <div class="title-container">
+                        <div class="logo">
+                            <span>Deploy</span>
+                            <svg class="badge-25" viewBox="807 137 180 150" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="paint11" x1="880" y1="247" x2="880" y2="265" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#FCF7F8"/>
+                                        <stop offset="1" stop-color="#E5E5E5"/>
+                                    </linearGradient>
+                                    <linearGradient id="paint12" x1="950" y1="172" x2="950" y2="258" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#FCF7F8"/>
+                                        <stop offset="1" stop-color="#E5E5E5"/>
+                                    </linearGradient>
+                                    <linearGradient id="paint13" x1="835" y1="170" x2="835" y2="256" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#FCF7F8"/>
+                                        <stop offset="1" stop-color="#E5E5E5"/>
+                                    </linearGradient>
+                                    <linearGradient id="paint14" x1="895" y1="182" x2="895" y2="245" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#FCF7F8"/>
+                                        <stop offset="1" stop-color="#E5E5E5"/>
+                                    </linearGradient>
+                                    <linearGradient id="paint15" x1="895" y1="166" x2="895" y2="179" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#FCF7F8"/>
+                                        <stop offset="1" stop-color="#E5E5E5"/>
+                                    </linearGradient>
+                                </defs>
+                                <g id="logomark">
+                                    <path id="Rectangle-21076" d="M855 188.857H940V237.368H852.995L855 188.857Z" fill="#000C79"/>
+                                    <mask id="mask2" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="814" y="166" width="146" height="100">
+                                        <g id="Subtract">
+                                            <path d="M834.189 247.427C835.589 248.395 837.298 248.975 839.187 248.975H937.214C938.701 248.975 940.101 248.606 941.33 247.955L952.82 260.799C949.489 263.508 945.24 265.133 940.612 265.133H834.34C828.826 265.133 824.003 262.885 820.547 259.364L834.189 247.427Z" fill="url(#paint11)"/>
+                                            <path d="M955.311 172.758C958.22 176.147 959.978 180.551 959.978 185.367V245.767C959.978 250.377 958.366 254.609 955.677 257.935L944.373 245.3C945.413 243.854 946.025 242.08 946.025 240.163V187.292C946.025 185.613 945.555 184.044 944.74 182.708L955.311 172.758Z" fill="url(#paint12)"/>
+                                            <path d="M853.402 181.037C852.538 181.893 851.845 182.935 851.389 184.117L830.967 236.988C829.965 239.582 830.274 242.264 831.478 244.432L818.027 256.202C814.915 251.342 813.935 245.101 816.179 239.041L838.548 178.641C839.726 175.461 841.68 172.729 844.149 170.626L853.402 181.037Z" fill="url(#paint13)"/>
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M937.214 182.519C939.85 182.519 941.987 184.656 941.987 187.292V240.163C941.987 242.799 939.85 244.936 937.214 244.936H839.187C835.835 244.936 833.527 241.571 834.734 238.443L855.156 185.572C855.866 183.733 857.636 182.519 859.608 182.519H937.214ZM900.123 199.025L897.617 215.169L906.878 216.953C909.257 215.211 910.999 214.616 913.59 214.616C917.116 214.616 918.9 216.146 918.9 218.737C918.9 221.711 916.649 223.155 912.826 223.155C909.002 223.155 906.835 221.796 906.326 219.459H895.832C896.342 227.064 903.861 230.42 913.207 230.42C923.743 230.42 929.394 225.959 929.394 218.907C929.394 212.62 924.891 208.966 917.201 208.966C912.911 208.966 909.851 209.859 907.557 210.921L908.195 206.333H926.93V199.025H900.123ZM876.397 198.346C867.093 198.346 859.489 201.49 858.682 209.816H869.09C869.09 206.417 871.809 205.143 876.142 205.143C880.008 205.143 881.282 206.162 881.283 208.074C881.283 214.361 858.215 212.62 858.215 225.195V229.57H891.223V221.924H870.28C872.276 217.973 891.649 218.864 891.649 207.522C891.648 201.404 885.743 198.346 876.397 198.346Z" fill="url(#paint14)"/>
+                                            <path d="M940.612 166C945.035 166 949.111 167.484 952.371 169.979L941.904 179.832C940.546 178.976 938.938 178.481 937.214 178.481H859.608C858.675 178.481 857.767 178.628 856.91 178.904L847.507 168.326C850.274 166.831 853.421 166 856.71 166H940.612Z" fill="url(#paint15)"/>
+                                        </g>
+                                    </mask>
+                                    <g mask="url(#mask2)">
+                                        <g id="core-colors">
+                                            <path id="Rectangle-21077" d="M807.555 149.556H987.477V286.494H807.555V149.556Z" fill="#FCF7F8"/>
+                                            <path id="Vector-669" d="M897.515 280.66C897.515 264.694 889.327 243.304 884.619 238.289C917.779 242.894 977.651 236.447 987.169 226.008L973.659 264.694C954.009 277.078 897.515 301.088 897.515 280.66Z" fill="#000C79"/>
+                                            <path id="Vector-670" d="M933.436 207.587C938.16 207.587 968.131 192.849 972.43 180.261L982.257 221.711C948.79 221.711 933.436 207.587 933.436 207.587Z" fill="#F4110A"/>
+                                            <path id="Vector-671" d="M812.467 179.952C849.925 204.208 947.869 194.076 977.037 168.592L791.281 137.889L806.019 271.449L806.025 271.456C808.185 274.233 817.671 286.431 870.189 284.958C872.338 264.387 850.539 204.606 812.467 179.952Z" fill="#F4110A"/>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="region-display">
+                        <span id="regionDisplay">Demo: A Globally Distributed & Highly Available Application</span>
+                    </div>
+                </div>
+                
+                <div class="qr-card">
+                    <div class="qr-code">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="400" zoomAndPan="magnify" viewBox="0 0 300 299.999988" height="400" preserveAspectRatio="xMidYMid meet" version="1.0"><defs><clipPath id="427776ca54"><path d="M 0.710938 0 L 300 0 L 300 299.289062 L 0.710938 299.289062 Z M 0.710938 0 " clip-rule="nonzero"/></clipPath><clipPath id="920888affc"><rect x="0" width="300" y="0" height="300"/></clipPath><clipPath id="cf33819baa"><path d="M 0.710938 0.710938 L 299.289062 0.710938 L 299.289062 299.289062 L 0.710938 299.289062 Z M 0.710938 0.710938 " clip-rule="nonzero"/></clipPath><clipPath id="6785e0ba83"><rect x="0" width="300" y="0" height="300"/></clipPath></defs><g transform="matrix(1, 0, 0, 1, -0.000000000000000056, 0)"><g clip-path="url(#920888affc)"><g clip-path="url(#427776ca54)"><path fill="#ffffff" d="M 0.710938 0 L 300 0 L 300 299.289062 L 0.710938 299.289062 Z M 0.710938 0 " fill-opacity="1" fill-rule="nonzero"/></g><path stroke-linecap="butt" transform="matrix(10.320321, 0, 0, 10.320321, 0.710666, 0)" fill-opacity="1" fill="#ffffff" fill-rule="nonzero" stroke-linejoin="miter" d="M 2.000025 2.499998 L 9.000018 2.499998 M 10.000018 2.499998 L 12.000016 2.499998 M 14.000014 2.499998 L 15.000013 2.499998 M 16.000012 2.499998 L 19.00001 2.499998 M 20.000009 2.499998 L 27.000003 2.499998 M 2.000025 3.499997 L 3.000024 3.499997 M 8.000019 3.499997 L 9.000018 3.499997 M 11.000017 3.499997 L 17.000012 3.499997 M 18.000011 3.499997 L 19.00001 3.499997 M 20.000009 3.499997 L 21.000008 3.499997 M 26.000004 3.499997 L 27.000003 3.499997 M 2.000025 4.499996 L 3.000024 4.499996 M 4.000023 4.499996 L 7.00002 4.499996 M 8.000019 4.499996 L 9.000018 4.499996 M 11.000017 4.499996 L 13.000015 4.499996 M 14.000014 4.499996 L 15.000013 4.499996 M 16.000012 4.499996 L 17.000012 4.499996 M 18.000011 4.499996 L 19.00001 4.499996 M 20.000009 4.499996 L 21.000008 4.499996 M 22.000007 4.499996 L 25.000005 4.499996 M 26.000004 4.499996 L 27.000003 4.499996 M 2.000025 5.499995 L 3.000024 5.499995 M 4.000023 5.499995 L 7.00002 5.499995 M 8.000019 5.499995 L 9.000018 5.499995 M 10.000018 5.499995 L 13.000015 5.499995 M 15.000013 5.499995 L 18.000011 5.499995 M 20.000009 5.499995 L 21.000008 5.499995 M 22.000007 5.499995 L 25.000005 5.499995 M 26.000004 5.499995 L 27.000003 5.499995 M 2.000025 6.499994 L 3.000024 6.499994 M 4.000023 6.499994 L 7.00002 6.499994 M 8.000019 6.499994 L 9.000018 6.499994 M 10.000018 6.499994 L 11.000017 6.499994 M 15.000013 6.499994 L 16.000012 6.499994 M 17.000012 6.499994 L 19.00001 6.499994 M 20.000009 6.499994 L 21.000008 6.499994 M 22.000007 6.499994 L 25.000005 6.499994 M 26.000004 6.499994 L 27.000003 6.499994 M 2.000025 7.499993 L 3.000024 7.499993 M 8.000019 7.499993 L 9.000018 7.499993 M 10.000018 7.499993 L 16.000012 7.499993 M 20.000009 7.499993 L 21.000008 7.499993 M 26.000004 7.499993 L 27.000003 7.499993 M 2.000025 8.499993 L 9.000018 8.499993 M 10.000018 8.499993 L 11.000017 8.499993 M 12.000016 8.499993 L 13.000015 8.499993 M 14.000014 8.499993 L 15.000013 8.499993 M 16.000012 8.499993 L 17.000012 8.499993 M 18.000011 8.499993 L 19.00001 8.499993 M 20.000009 8.499993 L 27.000003 8.499993 M 10.000018 9.499992 L 11.000017 9.499992 M 2.000025 10.499991 L 3.000024 10.499991 M 6.000021 10.499991 L 7.00002 10.499991 M 8.000019 10.499991 L 12.000016 10.499991 M 13.000015 10.499991 L 14.000014 10.499991 M 17.000012 10.499991 L 18.000011 10.499991 M 19.00001 10.499991 L 24.000005 10.499991 M 26.000004 10.499991 L 27.000003 10.499991 M 2.000025 11.49999 L 3.000024 11.49999 M 5.000022 11.49999 L 6.000021 11.49999 M 10.000018 11.49999 L 11.000017 11.49999 M 13.000015 11.49999 L 18.000011 11.49999 M 19.00001 11.49999 L 20.000009 11.49999 M 22.000007 11.49999 L 24.000005 11.49999 M 25.000005 11.49999 L 26.000004 11.49999 M 3.000024 12.499989 L 5.000022 12.499989 M 8.000019 12.499989 L 9.000018 12.499989 M 10.000018 12.499989 L 11.000017 12.499989 M 14.000014 12.499989 L 15.000013 12.499989 M 16.000012 12.499989 L 20.000009 12.499989 M 21.000008 12.499989 L 22.000007 12.499989 M 23.000006 12.499989 L 25.000005 12.499989 M 4.000023 13.499988 L 8.000019 13.499988 M 10.000018 13.499988 L 14.000014 13.499988 M 16.000012 13.499988 L 18.000011 13.499988 M 20.000009 13.499988 L 21.000008 13.499988 M 24.000005 13.499988 L 26.000004 13.499988 M 5.000022 14.499987 L 10.000018 14.499987 M 12.000016 14.499987 L 13.000015 14.499987 M 14.000014 14.499987 L 15.000013 14.499987 M 16.000012 14.499987 L 17.000012 14.499987 M 18.000011 14.499987 L 22.000007 14.499987 M 23.000006 14.499987 L 27.000003 14.499987 M 2.000025 15.499987 L 3.000024 15.499987 M 4.000023 15.499987 L 5.000022 15.499987 M 9.000018 15.499987 L 11.000017 15.499987 M 12.000016 15.499987 L 13.000015 15.499987 M 16.000012 15.499987 L 19.00001 15.499987 M 22.000007 15.499987 L 23.000006 15.499987 M 25.000005 15.499987 L 26.000004 15.499987 M 4.000023 16.499986 L 7.00002 16.499986 M 8.000019 16.499986 L 11.000017 16.499986 M 12.000016 16.499986 L 13.000015 16.499986 M 15.000013 16.499986 L 18.000011 16.499986 M 19.00001 16.499986 L 22.000007 16.499986 M 23.000006 16.499986 L 25.000005 16.499986 M 5.000022 17.499985 L 6.000021 17.499985 M 10.000018 17.499985 L 11.000017 17.499985 M 12.000016 17.499985 L 13.000015 17.499985 M 14.000014 17.499985 L 15.000013 17.499985 M 16.000012 17.499985 L 17.000012 17.499985 M 18.000011 17.499985 L 20.000009 17.499985 M 22.000007 17.499985 L 26.000004 17.499985 M 2.000025 18.499984 L 4.000023 18.499984 M 5.000022 18.499984 L 6.000021 18.499984 M 7.00002 18.499984 L 9.000018 18.499984 M 13.000015 18.499984 L 14.000014 18.499984 M 15.000013 18.499984 L 17.000012 18.499984 M 18.000011 18.499984 L 25.000005 18.499984 M 10.000018 19.499983 L 11.000017 19.499983 M 14.000014 19.499983 L 15.000013 19.499983 M 16.000012 19.499983 L 19.00001 19.499983 M 22.000007 19.499983 L 23.000006 19.499983 M 24.000005 19.499983 L 25.000005 19.499983 M 2.000025 20.499982 L 9.000018 20.499982 M 10.000018 20.499982 L 11.000017 20.499982 M 12.000016 20.499982 L 17.000012 20.499982 M 18.000011 20.499982 L 19.00001 20.499982 M 20.000009 20.499982 L 21.000008 20.499982 M 22.000007 20.499982 L 24.000005 20.499982 M 2.000025 21.499981 L 3.000024 21.499981 M 8.000019 21.499981 L 9.000018 21.499981 M 11.000017 21.499981 L 12.000016 21.499981 M 13.000015 21.499981 L 14.000014 21.499981 M 15.000013 21.499981 L 16.000012 21.499981 M 18.000011 21.499981 L 19.00001 21.499981 M 22.000007 21.499981 L 25.000005 21.499981 M 2.000025 22.49998 L 3.000024 22.49998 M 4.000023 22.49998 L 7.00002 22.49998 M 8.000019 22.49998 L 9.000018 22.49998 M 10.000018 22.49998 L 11.000017 22.49998 M 12.000016 22.49998 L 13.000015 22.49998 M 14.000014 22.49998 L 16.000012 22.49998 M 18.000011 22.49998 L 23.000006 22.49998 M 24.000005 22.49998 L 27.000003 22.49998 M 2.000025 23.49998 L 3.000024 23.49998 M 4.000023 23.49998 L 7.00002 23.49998 M 8.000019 23.49998 L 9.000018 23.49998 M 15.000013 23.49998 L 18.000011 23.49998 M 19.00001 23.49998 L 21.000008 23.49998 M 23.000006 23.49998 L 27.000003 23.49998 M 2.000025 24.499979 L 3.000024 24.499979 M 4.000023 24.499979 L 7.00002 24.499979 M 8.000019 24.499979 L 9.000018 24.499979 M 11.000017 24.499979 L 12.000016 24.499979 M 18.000011 24.499979 L 19.00001 24.499979 M 20.000009 24.499979 L 22.000007 24.499979 M 25.000005 24.499979 L 26.000004 24.499979 M 2.000025 25.499978 L 3.000024 25.499978 M 8.000019 25.499978 L 9.000018 25.499978 M 11.000017 25.499978 L 12.000016 25.499978 M 14.000014 25.499978 L 15.000013 25.499978 M 16.000012 25.499978 L 18.000011 25.499978 M 21.000008 25.499978 L 26.000004 25.499978 M 2.000025 26.499977 L 9.000018 26.499977 M 10.000018 26.499977 L 12.000016 26.499977 M 13.000015 26.499977 L 14.000014 26.499977 M 15.000013 26.499977 L 18.000011 26.499977 M 20.000009 26.499977 L 21.000008 26.499977 M 24.000005 26.499977 L 27.000003 26.499977 " stroke="#fffdfd" stroke-width="1" stroke-opacity="1" stroke-miterlimit="4"/></g></g><g transform="matrix(1, 0, 0, 1, -0.000000000000000056, 0)"><g clip-path="url(#6785e0ba83)"><g clip-path="url(#cf33819baa)"><path fill="#ffffff" d="M 0.710938 0.710938 L 299.289062 0.710938 L 299.289062 299.289062 L 0.710938 299.289062 Z M 0.710938 0.710938 " fill-opacity="1" fill-rule="nonzero"/></g><path stroke-linecap="butt" transform="matrix(10.295816, 0, 0, 10.295816, 0.710666, 0.71066)" fill-opacity="1" fill="#ffffff" fill-rule="nonzero" stroke-linejoin="miter" d="M 1.999853 2.499905 L 8.999814 2.499905 M 9.999917 2.499905 L 12.000123 2.499905 M 13.999949 2.499905 L 15.000052 2.499905 M 16.000155 2.499905 L 19.000084 2.499905 M 20.000187 2.499905 L 27.000149 2.499905 M 1.999853 3.500008 L 2.999956 3.500008 M 8.000091 3.500008 L 8.999814 3.500008 M 11.00002 3.500008 L 16.999879 3.500008 M 17.999982 3.500008 L 19.000084 3.500008 M 20.000187 3.500008 L 20.999911 3.500008 M 26.000046 3.500008 L 27.000149 3.500008 M 1.999853 4.500111 L 2.999956 4.500111 M 4.000059 4.500111 L 6.999988 4.500111 M 8.000091 4.500111 L 8.999814 4.500111 M 11.00002 4.500111 L 12.999846 4.500111 M 13.999949 4.500111 L 15.000052 4.500111 M 16.000155 4.500111 L 16.999879 4.500111 M 17.999982 4.500111 L 19.000084 4.500111 M 20.000187 4.500111 L 20.999911 4.500111 M 22.000014 4.500111 L 24.999943 4.500111 M 26.000046 4.500111 L 27.000149 4.500111 M 1.999853 5.499834 L 2.999956 5.499834 M 4.000059 5.499834 L 6.999988 5.499834 M 8.000091 5.499834 L 8.999814 5.499834 M 9.999917 5.499834 L 12.999846 5.499834 M 15.000052 5.499834 L 17.999982 5.499834 M 20.000187 5.499834 L 20.999911 5.499834 M 22.000014 5.499834 L 24.999943 5.499834 M 26.000046 5.499834 L 27.000149 5.499834 M 1.999853 6.499937 L 2.999956 6.499937 M 4.000059 6.499937 L 6.999988 6.499937 M 8.000091 6.499937 L 8.999814 6.499937 M 9.999917 6.499937 L 11.00002 6.499937 M 15.000052 6.499937 L 16.000155 6.499937 M 16.999879 6.499937 L 19.000084 6.499937 M 20.000187 6.499937 L 20.999911 6.499937 M 22.000014 6.499937 L 24.999943 6.499937 M 26.000046 6.499937 L 27.000149 6.499937 M 1.999853 7.50004 L 2.999956 7.50004 M 8.000091 7.50004 L 8.999814 7.50004 M 9.999917 7.50004 L 16.000155 7.50004 M 20.000187 7.50004 L 20.999911 7.50004 M 26.000046 7.50004 L 27.000149 7.50004 M 1.999853 8.500143 L 8.999814 8.500143 M 9.999917 8.500143 L 11.00002 8.500143 M 12.000123 8.500143 L 12.999846 8.500143 M 13.999949 8.500143 L 15.000052 8.500143 M 16.000155 8.500143 L 16.999879 8.500143 M 17.999982 8.500143 L 19.000084 8.500143 M 20.000187 8.500143 L 27.000149 8.500143 M 9.999917 9.499866 L 11.00002 9.499866 M 1.999853 10.499969 L 2.999956 10.499969 M 5.999885 10.499969 L 6.999988 10.499969 M 8.000091 10.499969 L 12.000123 10.499969 M 12.999846 10.499969 L 13.999949 10.499969 M 16.999879 10.499969 L 17.999982 10.499969 M 19.000084 10.499969 L 23.99984 10.499969 M 26.000046 10.499969 L 27.000149 10.499969 M 1.999853 11.500072 L 2.999956 11.500072 M 5.000161 11.500072 L 5.999885 11.500072 M 9.999917 11.500072 L 11.00002 11.500072 M 12.999846 11.500072 L 17.999982 11.500072 M 19.000084 11.500072 L 20.000187 11.500072 M 22.000014 11.500072 L 23.99984 11.500072 M 24.999943 11.500072 L 26.000046 11.500072 M 2.999956 12.500175 L 5.000161 12.500175 M 8.000091 12.500175 L 8.999814 12.500175 M 9.999917 12.500175 L 11.00002 12.500175 M 13.999949 12.500175 L 15.000052 12.500175 M 16.000155 12.500175 L 20.000187 12.500175 M 20.999911 12.500175 L 22.000014 12.500175 M 23.000117 12.500175 L 24.999943 12.500175 M 4.000059 13.499899 L 8.000091 13.499899 M 9.999917 13.499899 L 13.999949 13.499899 M 16.000155 13.499899 L 17.999982 13.499899 M 20.000187 13.499899 L 20.999911 13.499899 M 23.99984 13.499899 L 26.000046 13.499899 M 5.000161 14.500001 L 9.999917 14.500001 M 12.000123 14.500001 L 12.999846 14.500001 M 13.999949 14.500001 L 15.000052 14.500001 M 16.000155 14.500001 L 16.999879 14.500001 M 17.999982 14.500001 L 22.000014 14.500001 M 23.000117 14.500001 L 27.000149 14.500001 M 1.999853 15.500104 L 2.999956 15.500104 M 4.000059 15.500104 L 5.000161 15.500104 M 8.999814 15.500104 L 11.00002 15.500104 M 12.000123 15.500104 L 12.999846 15.500104 M 16.000155 15.500104 L 19.000084 15.500104 M 22.000014 15.500104 L 23.000117 15.500104 M 24.999943 15.500104 L 26.000046 15.500104 M 4.000059 16.499828 L 6.999988 16.499828 M 8.000091 16.499828 L 11.00002 16.499828 M 12.000123 16.499828 L 12.999846 16.499828 M 15.000052 16.499828 L 17.999982 16.499828 M 19.000084 16.499828 L 22.000014 16.499828 M 23.000117 16.499828 L 24.999943 16.499828 M 5.000161 17.499931 L 5.999885 17.499931 M 9.999917 17.499931 L 11.00002 17.499931 M 12.000123 17.499931 L 12.999846 17.499931 M 13.999949 17.499931 L 15.000052 17.499931 M 16.000155 17.499931 L 16.999879 17.499931 M 17.999982 17.499931 L 20.000187 17.499931 M 22.000014 17.499931 L 26.000046 17.499931 M 1.999853 18.500034 L 4.000059 18.500034 M 5.000161 18.500034 L 5.999885 18.500034 M 6.999988 18.500034 L 8.999814 18.500034 M 12.999846 18.500034 L 13.999949 18.500034 M 15.000052 18.500034 L 16.999879 18.500034 M 17.999982 18.500034 L 24.999943 18.500034 M 9.999917 19.500137 L 11.00002 19.500137 M 13.999949 19.500137 L 15.000052 19.500137 M 16.000155 19.500137 L 19.000084 19.500137 M 22.000014 19.500137 L 23.000117 19.500137 M 23.99984 19.500137 L 24.999943 19.500137 M 1.999853 20.49986 L 8.999814 20.49986 M 9.999917 20.49986 L 11.00002 20.49986 M 12.000123 20.49986 L 16.999879 20.49986 M 17.999982 20.49986 L 19.000084 20.49986 M 20.000187 20.49986 L 20.999911 20.49986 M 22.000014 20.49986 L 23.99984 20.49986 M 1.999853 21.499963 L 2.999956 21.499963 M 8.000091 21.499963 L 8.999814 21.499963 M 11.00002 21.499963 L 12.000123 21.499963 M 12.999846 21.499963 L 13.999949 21.499963 M 15.000052 21.499963 L 16.000155 21.499963 M 17.999982 21.499963 L 19.000084 21.499963 M 22.000014 21.499963 L 24.999943 21.499963 M 1.999853 22.500066 L 2.999956 22.500066 M 4.000059 22.500066 L 6.999988 22.500066 M 8.000091 22.500066 L 8.999814 22.500066 M 9.999917 22.500066 L 11.00002 22.500066 M 12.000123 22.500066 L 12.999846 22.500066 M 13.999949 22.500066 L 16.000155 22.500066 M 17.999982 22.500066 L 23.000117 22.500066 M 23.99984 22.500066 L 27.000149 22.500066 M 1.999853 23.500169 L 2.999956 23.500169 M 4.000059 23.500169 L 6.999988 23.500169 M 8.000091 23.500169 L 8.999814 23.500169 M 15.000052 23.500169 L 17.999982 23.500169 M 19.000084 23.500169 L 20.999911 23.500169 M 23.000117 23.500169 L 27.000149 23.500169 M 1.999853 24.499892 L 2.999956 24.499892 M 4.000059 24.499892 L 6.999988 24.499892 M 8.000091 24.499892 L 8.999814 24.499892 M 11.00002 24.499892 L 12.000123 24.499892 M 17.999982 24.499892 L 19.000084 24.499892 M 20.000187 24.499892 L 22.000014 24.499892 M 24.999943 24.499892 L 26.000046 24.499892 M 1.999853 25.499995 L 2.999956 25.499995 M 8.000091 25.499995 L 8.999814 25.499995 M 11.00002 25.499995 L 12.000123 25.499995 M 13.999949 25.499995 L 15.000052 25.499995 M 16.000155 25.499995 L 17.999982 25.499995 M 20.999911 25.499995 L 26.000046 25.499995 M 1.999853 26.500098 L 8.999814 26.500098 M 9.999917 26.500098 L 12.000123 26.500098 M 12.999846 26.500098 L 13.999949 26.500098 M 15.000052 26.500098 L 17.999982 26.500098 M 20.000187 26.500098 L 20.999911 26.500098 M 23.99984 26.500098 L 27.000149 26.500098 " stroke="#000000" stroke-width="1" stroke-opacity="1" stroke-miterlimit="4"/></g></g></svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deploy-status">
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <div class="status-text">Deployment Active</div>
+                </div>
+                <div class="region-info">
+                    <div class="region-label">Current Region</div>
+                    <div class="region-name" id="regionName">Loading...</div>
+                </div>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card" onclick="showPage('arch')">
+                    <div class="card-icon">🏗️</div>
+                    <div class="card-title">Architecture</div>
+                    <div class="card-description">View the complete system architecture diagram showing the multi-region VPC mesh, load balancers, and droplet distribution.</div>
+                </div>
+
+                <div class="card" onclick="showPage('repo')">
+                    <div class="card-icon">🎯</div>
+                    <div class="card-title">Start Building Today</div>
+                    <div class="card-description">Sign up and get $200 in credit for your first 60 days with DigitalOcean.</div>
+                </div>
+
+                <div class="card" onclick="showPage('loadbalancer')">
+                    <div class="card-icon">🌐</div>
+                    <div class="card-title">Global Load Balancer</div>
+                    <div class="card-description">Traffic is distributed across multiple regions with anycast IPs and CDN acceleration for optimal performance.</div>
+                </div>
+
+                <div class="card" onclick="showPage('scale-with-simplicity')">
+                    <div class="card-icon">🚀</div>
+                    <div class="card-title">Scale With Simplicity</div>
+                    <div class="card-description">Reference architectures to showcase how users can leverage DigitalOcean's robust cloud platform to build resilient, distributed systems at scale.</div>
+                </div>
+
+                <div class="card" onclick="showPage('high-availability')">
+                    <div class="card-icon">⚡</div>
+                    <div class="card-title">High Availability</div>
+                    <div class="card-description">Multi-region deployment with health checks and automatic failover capabilities.</div>
+                </div>
+
+                <div class="card" onclick="showPage('monitoring')">
+                    <div class="card-icon">📊</div>
+                    <div class="card-title">Monitoring</div>
+                    <div class="card-description">Built-in health checks and monitoring across all regional deployments and load balancers.</div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="footer-content">
+                    <!-- Left SVG -->
+                    <div class="footer-svg footer-svg-left">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 383 495" fill="none">
+                            <path d="M137.241 493.337H-26V81.1081L137.241 41.0684V493.337Z" fill="#000C79"/>
+                            <path d="M281.998 41.0684H137.238V494.5H281.998V41.0684Z" fill="#F4110A"/>
+                            <path d="M282 333C282 333 304.887 359.329 301.403 377.179C297.918 395.029 282 425.82 282 425.82V431.175C282 431.175 300.409 404.401 332.748 386.55C365.088 368.7 358.621 355.314 358.621 355.314C358.621 355.314 372.551 381.643 339.715 410.649C306.878 439.655 288.635 441.885 287.807 452.15C287.807 452.15 316.331 432.515 349.667 433.854C383.002 435.193 383 419.127 383 419.127C383 419.127 380.512 465.984 294.44 465.984L282.002 470V333.003L282 333Z" fill="#0069FF"/>
+                            <path d="M-26 81.1064C-26 81.1064 26.8737 0 137.24 0C247.606 0 282 41.0667 282 41.0667H137.24L-26 81.1064Z" fill="#F4110A"/>
+                            <path d="M281.998 41.0663C281.998 41.0663 252.739 12.3193 209.618 12.3193C166.498 12.3193 137.238 41.0663 137.238 41.0663H281.998Z" fill="#0069FF"/>
+                            <path d="M52.9169 22.1184C38.7847 24.9186 26.1634 31.9758 16.083 39.1882C10.5489 43.246 5.56979 47.3204 1.13953 51.2515C0.842466 51.5169 0.527309 51.7943 0.242313 52.0491C-17.3521 67.8461 -26 81.1082 -26 81.1082L137.24 41.0685C137.24 41.0685 117.279 13.2458 52.9169 22.1184Z" fill="#0117E4"/>
+                            <path d="M-5.59766 95.4466V125.317L117.5 100.5V70.6297L-5.59766 95.4466Z" fill="#F2EBE3"/>
+                            <path d="M116.833 134L-5.59766 154.5V435.309H34.522H75.6777H116.833V134Z" fill="#0069FF"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M76.6826 174.215L116.833 168.073V170.096L76.6826 176.237V218.215L116.833 212.073V214.096L76.6826 220.237V261.715C89.3499 259.982 102.591 258.113 116.833 256.015V258.036C102.593 260.133 89.3511 262 76.6826 263.732V304.017L116.833 299.341V301.354L76.6826 306.029V347.741L116.833 343.249V345.262L76.6826 349.754V389.541L116.833 386.516V388.521L76.6826 391.547V435.307H74.6826V391.697L31 394.988V435H29V395.14L-5.59766 397.746V395.74L29 393.134V355.088L-5.59766 358.958V356.945L29 353.075V311.581L-5.59766 315.609V313.597L29 309.568V270.062C28.5432 270.121 28.0866 270.182 27.6299 270.241C16.6642 271.672 5.69976 273.106 -5.59766 274.614V272.597C5.60962 271.101 16.4902 269.679 27.3701 268.259C27.9134 268.188 28.4567 268.117 29 268.046V227.531L-5.59766 232.823V230.801L29 225.509V183.531L-5.59766 188.823V186.801L29 181.509V148.706L31 148.371V181.203L74.6826 174.521V141.058L76.6826 140.723V174.215ZM31 354.864V392.983L74.6826 389.692V349.978L31 354.864ZM31 311.349V352.852L74.6826 347.965V306.263L31 311.349ZM74.6826 264.005C59.5747 266.064 45.2578 267.94 31 269.801V309.335L74.6826 304.249V264.005ZM31 227.226V267.784C45.2563 265.923 59.573 264.047 74.6826 261.987V220.544L31 227.226ZM31 183.226V225.203L74.6826 218.521V176.544L31 183.226Z" fill="#000C79"/>
+                            <path d="M267.374 65.416H154.954V95.3662H267.374V65.416Z" fill="#FFC001"/>
+                            <path d="M267.374 129.039H154.954V435.307H267.374V129.039Z" fill="#F2EBE3"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M233.871 164.5H267.374V167.5H233.871V208.5H267.374V211.5H233.871V252.5H267.374V255.5H233.871V296.5H267.374V299.5H233.871V340.5H267.374V343.5H233.871V384.5H267.374V387.5H233.871V435.307H230.871V387.5H192.662V435.307H189.662V387.5H154.954V384.5H189.662V343.5H154.954V340.5H189.662V299.5H154.954V296.5H189.662V255.5H154.954V252.5H189.662V211.5H154.954V208.5H189.662V167.5H154.954V164.5H189.662V129.039H192.662V164.5H230.871V129.039H233.871V164.5ZM192.662 384.5H230.871V343.5H192.662V384.5ZM192.662 340.5H230.871V299.5H192.662V340.5ZM192.662 296.5H230.871V255.5H192.662V296.5ZM192.662 252.5H230.871V211.5H192.662V252.5ZM192.662 208.5H230.871V167.5H192.662V208.5Z" fill="#000C79"/>
+                        </svg>
+                    </div>
+
+                    <!-- YouTube Video -->
+                    <div class="footer-video">
+                        <iframe 
+                            src="https://www.youtube.com/embed/VJyF_d8hvpo" 
+                            title="YouTube video player" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+
+                    <!-- Right SVG (same as document provided) -->
+                    <div class="footer-svg footer-svg-right">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 335 460" fill="none">
+                            <path d="M82.4524 446.722C101.645 446.722 117.204 429.028 117.204 407.2C117.204 385.373 101.645 367.679 82.4524 367.679C63.2598 367.679 47.7012 385.373 47.7012 407.2C47.7012 429.028 63.2598 446.722 82.4524 446.722Z" fill="#000C79"/>
+                            <path d="M627.269 423.387L627.267 423.39V423.386L627.269 423.387Z" fill="#F4110A"/>
+                            <path d="M22.2549 134.427C22.2549 60.3825 24.6454 -5.43814 156.326 0.35589C166.359 0.355923 176.364 1.36653 186.192 3.37835L558.425 79.5385L571.986 82.1967C604.101 88.489 627.267 116.634 627.267 149.358V423.386L281.764 406.978C279.84 384.006 262.682 364.76 240.196 364.76C219.004 364.76 202.543 381.856 199.108 403.053L171.445 401.74H171.406L24.6445 396.111C17.025 395.82 11 390.5 11 376.5L0 363.5V315.5L11 299C11 289.001 13.4937 280.6 17.6055 277.999L46.0156 260.956C50.086 258.382 54.833 257.08 59.6475 257.215L78.542 257.306L94.0977 211.872H37.8105C29.2188 211.872 22.2551 204.909 22.2549 196.318V134.427Z" fill="#F4110A"/>
+                            <path d="M627.269 423.387L627.267 423.39V423.386L627.269 423.387Z" fill="#0117E4"/>
+                            <path d="M558.425 79.5381L571.987 82.1953C581.877 84.1331 590.918 88.1443 598.695 93.7227C598.72 93.7407 598.745 93.7593 598.771 93.7773C605.648 98.7245 611.533 104.899 616.14 111.951C616.173 112.003 616.207 112.054 616.24 112.105C616.612 112.678 616.975 113.255 617.33 113.839C617.353 113.876 617.376 113.914 617.398 113.951C618.141 115.178 618.845 116.429 619.51 117.703C619.528 117.738 619.546 117.772 619.564 117.807C620.056 118.752 620.526 119.711 620.974 120.681C621.003 120.744 621.032 120.808 621.062 120.872C621.649 122.155 622.2 123.458 622.709 124.78C622.735 124.848 622.76 124.915 622.786 124.982C623.023 125.604 623.251 126.23 623.47 126.859C623.493 126.926 623.516 126.993 623.539 127.06C623.757 127.692 623.967 128.328 624.167 128.969C624.191 129.047 624.216 129.126 624.24 129.204C624.441 129.857 624.632 130.515 624.814 131.176C624.828 131.225 624.842 131.274 624.855 131.323C625.028 131.954 625.19 132.588 625.345 133.226C625.37 133.328 625.395 133.431 625.419 133.534C625.569 134.167 625.71 134.803 625.843 135.442C625.865 135.548 625.887 135.655 625.908 135.761C625.97 136.068 626.031 136.375 626.089 136.684C626.106 136.772 626.121 136.861 626.138 136.95C626.179 137.176 626.22 137.402 626.259 137.628C626.277 137.734 626.296 137.84 626.313 137.946C626.368 138.268 626.419 138.591 626.469 138.915C626.48 138.988 626.491 139.061 626.502 139.134C626.545 139.421 626.586 139.709 626.626 139.997C626.636 140.067 626.646 140.138 626.655 140.208C626.696 140.51 626.734 140.812 626.771 141.114C626.787 141.248 626.802 141.382 626.817 141.516C626.845 141.757 626.872 142 626.897 142.242C626.905 142.315 626.913 142.389 626.92 142.462C626.952 142.782 626.982 143.103 627.01 143.424C627.019 143.534 627.028 143.644 627.037 143.754C627.058 144.005 627.077 144.257 627.095 144.509C627.101 144.595 627.108 144.681 627.113 144.767C627.134 145.076 627.151 145.386 627.168 145.696C627.174 145.814 627.18 145.931 627.186 146.049C627.199 146.324 627.211 146.6 627.221 146.876C627.223 146.938 627.226 147.001 627.229 147.063C627.239 147.369 627.245 147.674 627.251 147.98C627.254 148.122 627.256 148.264 627.258 148.405C627.262 148.722 627.267 149.039 627.267 149.356V423.386L281.765 406.977C279.84 384.005 262.682 364.76 240.196 364.76C219.005 364.76 202.544 381.855 199.108 403.052L171.445 401.738H171.406L129.5 400.5L148 365.5V313.5H164.264V268.344L184.604 205.771C185.141 204.117 185.341 202.408 185.202 200.675C181.15 150.162 164 43.5003 215 42C266 40.5 286.5 55.9998 319.048 30.5605L558.425 79.5381Z" fill="#0117E4"/>
+                            <path d="M240.197 450.803C259.389 450.803 274.948 433.109 274.948 411.281C274.948 389.454 259.389 371.76 240.197 371.76C221.004 371.76 205.445 389.454 205.445 411.281C205.445 433.109 221.004 450.803 240.197 450.803Z" fill="#000C79"/>
+                            <path d="M243.5 390.5C252.685 390.5 260.5 399.235 260.5 410.5C260.5 421.765 252.685 430.5 243.5 430.5C234.315 430.5 226.5 421.765 226.5 410.5C226.5 399.235 234.315 390.5 243.5 390.5Z" fill="#0069FF" stroke="#0117E4" stroke-width="3"/>
+                            <path d="M627.274 232.897V245.927L183.794 200.674H22.8797C22.4774 199.292 22.2617 197.83 22.2617 196.318V187.711H184.454L627.274 232.897Z" fill="#FFC001"/>
+                            <path d="M185.413 200.837L627.273 245.925V232.894L185.413 187.807V200.837Z" fill="#F2EBE3"/>
+                            <rect x="66.1533" y="121.6" width="75.1854" height="57.0372" rx="10" fill="#000C79"/>
+                            <path d="M85.3018 156.896H141.339V158.896H66.1533V156.896H83.3018V121.599H85.3018V156.896Z" fill="#F4110A"/>
+                            <path d="M147.375 48.7324H58.8193C49.9828 48.7324 42.8193 55.8959 42.8193 64.7324V93.8528C42.8193 102.689 49.9828 109.853 58.8193 109.853H147.375C156.212 109.853 163.375 102.689 163.375 93.8528V64.7324C163.375 55.8959 156.212 48.7324 147.375 48.7324Z" fill="#0117E4"/>
+                            <path d="M147.376 48.7324C150.459 48.7325 153.337 49.6057 155.779 51.1162L111.077 109.854H98.0449L144.562 48.7324H147.376Z" fill="#F2EBE3"/>
+                            <path d="M99.5664 48.7324L53.6875 109.012C53.2403 108.86 52.8025 108.689 52.374 108.5L97.8623 48.7324H99.5664Z" fill="#F2EBE3"/>
+                            <path d="M92.7803 48.7324L48.8906 106.399C45.9443 104.064 43.8394 100.714 43.1055 96.877L79.748 48.7324H92.7803Z" fill="#F2EBE3"/>
+                            <path d="M100.857 42.7324V61.7471H163.376V63.7471H100.857L100.856 110.854H98.8564L98.8574 63.7471H42.8193V61.7471H98.8574V42.7324H100.857Z" fill="#F4110A"/>
+                            <path d="M163.672 220.118H112.712C107.766 220.118 103.327 223.153 101.531 227.761L87.4891 263.791C85.956 267.725 88.8576 271.97 93.0796 271.97H144.04C148.986 271.97 153.425 268.936 155.221 264.328L169.263 228.297C170.796 224.363 167.894 220.118 163.672 220.118Z" fill="#0117E4"/>
+                            <path d="M147.641 220.117H134.608L95.1572 271.952C95.3298 271.963 95.5042 271.969 95.6804 271.969H108.177L147.641 220.117Z" fill="#F2EBE3"/>
+                            <path d="M118.643 271.969H114.646L154.11 220.117H158.107L118.643 271.969Z" fill="#F2EBE3"/>
+                            <path d="M158.149 258H84L84.8505 256H159L158.149 258Z" fill="#F4110A"/>
+                            <path d="M276.915 226.118L193.63 219.182C191.147 218.975 188.891 220.627 188.339 223.056L177.643 270.122C176.959 273.129 179.133 276.031 182.21 276.221L276.192 282.024C279.069 282.202 281.5 279.916 281.5 277.034V231.101C281.5 228.5 279.506 226.334 276.915 226.118Z" fill="#0069FF"/>
+                            <path d="M392.54 251.648L297.379 244.409C294.477 244.188 292 246.484 292 249.395V276.336C292 278.978 294.055 281.164 296.692 281.327L391.853 287.203C394.73 287.381 397.161 285.095 397.161 282.212V256.634C397.161 254.02 395.147 251.847 392.54 251.648Z" fill="#0069FF"/>
+                            <path d="M475.988 245.803V297.896H472.988V245.521L475.988 245.803Z" fill="#0117E4"/>
+                            <path d="M403.599 238.989V293.01L400.599 292.783V238.707L403.599 238.989Z" fill="#0117E4"/>
+                            <path d="M336.191 232.646V287.922L333.191 287.696V232.363L336.191 232.646Z" fill="#0117E4"/>
+                            <path d="M245.45 222.105V281.074L242.45 280.848V221.823L245.45 222.105Z" fill="#0117E4"/>
+                            <path d="M588.251 113.14L234.268 55.7373C220.887 53.5674 208.746 63.898 208.746 77.4536V87.9397C208.746 99.8316 217.455 109.93 229.217 111.679L586.716 164.821C589.737 165.27 592.451 162.929 592.451 159.875V118.076C592.451 115.623 590.672 113.533 588.251 113.14Z" fill="#0069FF"/>
+                            <path d="M538.414 105.058V157.64L535.414 157.194V104.571L538.414 105.058Z" fill="#0117E4"/>
+                            <path d="M271.376 61.7539V76.5762L333.191 86.2354V72.3398H336.191V86.7041L400.599 96.7676V82.709L403.599 83.1953V97.2363L475.784 108.516V94.9014L478.784 95.3877V148.776L475.784 148.33V110.539L403.599 99.2607V137.6L400.599 137.153V98.792L336.191 88.7285V127.58L333.191 127.134V88.2598L271.376 78.6006V117.945L268.376 117.499V61.2676L271.376 61.7539Z" fill="#0117E4"/>
+                            <path d="M190.935 222H175.065C173.372 222 172 223.353 172 225.022V257.978C172 259.647 173.372 261 175.065 261H190.935C192.628 261 194 259.647 194 257.978V225.022C194 223.353 192.628 222 190.935 222Z" fill="#FFC001"/>
+                            <path d="M69.9346 220H54.0653C52.3723 220 51 221.353 51 223.022V255.978C51 257.647 52.3723 259 54.0653 259H69.9346C71.6275 259 73 257.647 73 255.978V223.022C73 221.353 71.6275 220 69.9346 220Z" fill="#FFC001"/>
+                            <path d="M627.266 178.41V181.029L184.845 117.826C184.299 117.748 183.748 117.709 183.195 117.709H22.3516C22.3647 116.843 22.3795 115.978 22.3963 115.116H183.195C183.87 115.116 184.544 115.164 185.212 115.26L627.266 178.41Z" fill="#000C79"/>
+                            <ellipse cx="12" cy="325.5" rx="10" ry="12.5" fill="#FFC001"/>
+                            <ellipse cx="126.5" cy="328.5" rx="10.5" ry="12.5" fill="#FFC001"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M34.1777 307.182L100.178 309.135C103.421 309.232 106 311.888 106 315.133V375.82L105.992 376.135C105.831 379.265 103.272 381.749 100.138 381.818L99.8223 381.817L33.8223 379.864C30.5792 379.768 28 377.111 28 373.867V313.179C28.0005 309.797 30.7963 307.082 34.1777 307.182ZM69 376.903L99.9404 377.819C101.068 377.852 102 376.948 102 375.82V315.133C102 314.051 101.14 313.166 100.06 313.134L72 312.214L69 322V376.903ZM34.0596 311.18C32.9326 311.147 32.0005 312.052 32 313.179V373.867C32 374.948 32.8596 375.834 33.9404 375.866L64 376.755V322L61 312.066L34.0596 311.18Z" fill="#F2EBE3"/>
+                        </svg>
+                    </div>
+                </div>
+                <p>Powered by DigitalOcean • Deployed with Terraform • Multi-Region Architecture</p>
+            </div>
+        </div>
+
+        <!-- Architecture Page -->
+        <div class="arch-page" id="archPage">
+            <button class="back-btn" onclick="showPage('main')">← Back to Main</button>
+            <div class="header">
+                <div class="logo">System Architecture</div>
+                <div class="subtitle">Multi-Region VPC Mesh with Global Load Balancing</div>
+            </div>
+            <div class="deploy-status">
+                <img src="ARCHITECTURE_IMAGE_URL_PLACEHOLDER" alt="System Architecture Diagram" class="arch-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <div style="display: none; text-align: center; padding: 40px;">
+                    <div style="font-size: 4rem; opacity: 0.5;">🏗️</div>
+                    <p>Architecture diagram will be displayed here</p>
+                    <p style="opacity: 0.7; margin-top: 10px;">Please provide the architecture image URL</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Repository Redirect Page -->
+        <div class="repo-page" id="repoPage">
+            <div class="header">
+                <div class="logo">Redirecting to Repository...</div>
+                <div class="subtitle">Taking you to the GitHub repository</div>
+            </div>
+            <div class="deploy-status">
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <div class="status-text">Redirecting to GitHub...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get region information from the page or detect it
+        function getRegionInfo() {
+            // Method 1: Try to get region from the regionName element (set by Terraform)
+            const regionElement = document.getElementById('regionName');
+            if (regionElement && regionElement.textContent && regionElement.textContent !== 'Loading...') {
+                return regionElement.textContent;
+            }
+
+            // Method 2: Try to get region from the page title
+            const title = document.title;
+            if (title.includes('Region:')) {
+                const regionMatch = title.match(/Region:\s*([^-\s]+)/);
+                if (regionMatch) {
+                    return regionMatch[1].trim();
+                }
+            }
+
+            // Method 3: Try to get region from the HTML title or headers
+            const titleElement = document.querySelector('h1');
+            if (titleElement && titleElement.textContent.includes('Region:')) {
+                const regionMatch = titleElement.textContent.match(/Region:\s*([^-]+)/);
+                if (regionMatch) {
+                    return regionMatch[1].trim();
+                }
+            }
+
+            // Method 4: Check the page subtitle
+            const subtitleElement = document.querySelector('.subtitle');
+            if (subtitleElement && subtitleElement.textContent.includes('Region:')) {
+                const regionMatch = subtitleElement.textContent.match(/Region:\s*([^-\s]+)/);
+                if (regionMatch) {
+                    return regionMatch[1].trim();
+                }
+            }
+
+            // Method 5: Try to fetch region from a dedicated endpoint
+            fetch('/region.txt')
+                .then(response => response.text())
+                .then(data => {
+                    if (data && data.includes('Region:')) {
+                        const regionMatch = data.match(/Region:\s*([^\s]+)/);
+                        if (regionMatch) {
+                            document.getElementById('regionName').textContent = regionMatch[1].trim();
+                            return;
+                        }
+                    }
+                })
+                .catch(() => {
+                    // Fallback to hostname detection
+                    const hostname = window.location.hostname;
+                    let region = 'Multi-Region';
+                    if (hostname.includes('nyc')) region = 'NYC3';
+                    else if (hostname.includes('sfo')) region = 'SFO3';
+                    else if (hostname.includes('lon')) region = 'LON1';
+                    else if (hostname.includes('fra')) region = 'FRA1';
+                    else if (hostname.includes('sgp')) region = 'SGP1';
+                    else if (hostname.includes('ams')) region = 'AMS3';
+                    else if (hostname.includes('tor')) region = 'TOR1';
+                    else if (hostname.includes('blr')) region = 'BLR1';
+                    
+                    document.getElementById('regionName').textContent = region;
+                });
+
+            // Method 6: Fallback to detecting from hostname
+            const hostname = window.location.hostname;
+            if (hostname.includes('nyc')) return 'NYC3';
+            if (hostname.includes('sfo')) return 'SFO3';
+            if (hostname.includes('lon')) return 'LON1';
+            if (hostname.includes('fra')) return 'FRA1';
+            if (hostname.includes('sgp')) return 'SGP1';
+            if (hostname.includes('ams')) return 'AMS3';
+            if (hostname.includes('tor')) return 'TOR1';
+            if (hostname.includes('blr')) return 'BLR1';
+            
+            return 'Multi-Region';
+        }
+
+        // Update the region display
+        document.getElementById('regionName').textContent = getRegionInfo();
+
+        // Page navigation
+        function showPage(page) {
+            const pages = ['main', 'arch', 'repo'];
+            
+            pages.forEach(p => {
+                const element = document.getElementById(p + 'Page');
+                if (element) {
+                    element.classList.remove('active');
+                    if (p === 'main') {
+                        element.classList.toggle('hidden', p !== page);
+                    } else {
+                        element.style.display = p === page ? 'block' : 'none';
+                    }
+                }
+            });
+
+            if (page === 'arch') {
+                document.getElementById('archPage').classList.add('active');
+            } else if (page === 'repo') {
+                window.open('https://cloud.digitalocean.com/registrations/new?utm_source=Webpage&utm_medium=Event&utm_campaign=Deploy25&refcode=f6fcd01aaffb', '_blank');
+                setTimeout(() => showPage('main'), 1000);
+            } else if (page === "loadbalancer") {
+                window.open('https://www.digitalocean.com/products/load-balancers?utm_source=google&utm_medium=cpc&utm_campaign=search_in_en_brand&utm_adgroup=digitalocean_load_balancer&utm_term=digitalocean%20load%20balancer&utm_creative=749696910686&utm_location=9062141&utm_matchtype=e&utm_device=c&gad_source=1&gad_campaignid=22502873005&gbraid=0AAAAADw9jctAutyM243pDrX5G5-oKSboH&gclid=Cj0KCQjw3OjGBhDYARIsADd-uX6yMSXNi_OnVoZdhoHn_hk9mW0gRv9coWKhb5SntUDaDXsTcUn89T0aAlicEALw_wcB', '_blank');
+                setTimeout(() => showPage('main'), 1000);
+            } else if (page === "scale-with-simplicity") {
+                window.open('https://github.com/digitalocean/scale-with-simplicity', '_blank');
+                setTimeout(() => showPage('main'), 1000);
+            } else if (page === "high-availability") {
+                window.open('https://www.digitalocean.com/community/tutorials/what-is-high-availability', '_blank');
+                setTimeout(() => showPage('main'), 1000);
+            } else if (page === "monitoring") {
+                window.open('https://docs.digitalocean.com/products/monitoring/', '_blank');
+                setTimeout(() => showPage('main'), 1000);
+            }
+        }
+
+        // Handle browser back/forward
+        window.addEventListener('popstate', function(event) {
+            const path = window.location.pathname;
+            if (path === '/arch') {
+                showPage('arch');
+            } else if (path === '/repo') {
+                showPage('repo');
+            } else {
+                showPage('main');
+            }
+        });
+
+        // Handle initial page load based on URL
+        document.addEventListener('DOMContentLoaded', function() {
+            const path = window.location.pathname;
+            if (path === '/arch') {
+                showPage('arch');
+            } else if (path === '/repo') {
+                showPage('repo');
+            } else {
+                showPage('main');
+            }
+        });
+
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
