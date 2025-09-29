@@ -188,7 +188,7 @@ systemctl start docker
 systemctl enable docker
 
 # Deploy the custom web UI from a remote source
-curl -o /var/www/html/index.html https://raw.githubusercontent.com/digitalocean/scale-with-simplicity/main/globally-load-balanced-web-servers/terraform/digitalocean-ui.html
+curl -o /var/www/html/index.html https://raw.githubusercontent.com/Yashsharma1911/DO-Labs/refs/heads/main/globally-load-balanced-web-servers/terraform/digitalocean-ui.html
 
 # Update the region information dynamically
 # Method 1: Try sed replacement

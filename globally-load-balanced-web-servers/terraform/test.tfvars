@@ -1,6 +1,6 @@
 tls           = false
 domain        = "yashtest.site"
-name_prefix   = "glb-ws-test"
+name_prefix   = "deploy-london"
 droplet_size  = "s-4vcpu-8gb"
 droplet_image = "ubuntu-22-04-x64"
 ssh_key       = "doks-smb"
@@ -17,7 +17,7 @@ vpcs = [
     ip_range = "10.200.0.0/24"
   },
   {
-    region   = "sfo3",
+    region   = "lon1",
     ip_range = "10.200.1.0/24"
   },
   {

@@ -1,7 +1,7 @@
 {
   "version": 4,
   "terraform_version": "1.5.7",
-  "serial": 348,
+  "serial": 347,
   "lineage": "715ce538-d625-4635-243c-9f740c29451e",
   "outputs": {
     "glb_fqdn": {
@@ -144,6 +144,23 @@
             "region": "ams3",
             "timeouts": null,
             "urn": "do:vpc:8ab2c8c2-faec-40ca-a854-93bd7695b2f4"
+          },
+          "sensitive_attributes": [],
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiZGVsZXRlIjoxMjAwMDAwMDAwMDB9fQ=="
+        },
+        {
+          "index_key": "vpc-3",
+          "schema_version": 0,
+          "attributes": {
+            "created_at": "2025-09-29 11:46:00 +0000 UTC",
+            "default": true,
+            "description": "",
+            "id": "01fd87d1-7870-4b50-8128-5787354f4326",
+            "ip_range": "10.200.3.0/24",
+            "name": "glb-ws-test-lon1",
+            "region": "lon1",
+            "timeouts": null,
+            "urn": "do:vpc:01fd87d1-7870-4b50-8128-5787354f4326"
           },
           "sensitive_attributes": [],
           "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiZGVsZXRlIjoxMjAwMDAwMDAwMDB9fQ=="
